@@ -12,7 +12,7 @@ class SaleOrder(models.Model):
     def _prepare_from_pos(self, order_data):
         PosSession = self.env["pos.session"]
         session = PosSession.browse(order_data["pos_session_id"])
-        return {
+        vals = {
             "partner_id": order_data["partner_id"],
             "origin": _("Point of Sale %s") % (session.name),
             "client_order_ref": order_data["name"],
@@ -20,6 +20,12 @@ class SaleOrder(models.Model):
             "pricelist_id": order_data["pricelist_id"],
             "fiscal_position_id": order_data["fiscal_position_id"],
         }
+        # To set default warehouse based on POS config stock location
+        if session and session.config_id and session.config_id.stock_location_id:
+            warehouse = self.env['stock.warehouse'].sudo().search([('lot_stock_id', '=', session.config_id.stock_location_id.id)], limit=1)
+            if warehouse:
+                vals['warehouse_id'] = warehouse.id
+        return vals
 
     @api.model
     def create_order_from_pos(self, order_data, action):
