@@ -1,20 +1,29 @@
-# Copyright (C) 2017 - Today: GRAP (http://www.grap.coop)
-# @author: Sylvain LE GAL (https://twitter.com/legalsylvain)
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
+# -*- coding: utf-8 -*-
 
 {
-    "name": "PoS Order To Sale Order",
-    "version": "12.0.1.0.3",
-    "author": "GRAP,Odoo Community Association (OCA)",
-    "category": "Point Of Sale",
-    "license": "AGPL-3",
-    "depends": ["point_of_sale", "sale"],
-    "maintainers": ["legalsylvain"],
-    "development_status": "Production/Stable",
-    "website": "https://github.com/OCA/pos",
-    "data": [
-        "views/view_pos_config.xml",
-        "views/assets.xml",
+    'name': 'Pos Order to Sale Order',
+    'version': '14.0.1.0.0',
+    'category': 'Point of Sale',
+    'summary': 'Create FE invocie from POS',
+    'description': """Service charges in pos""",
+    'depends': ['point_of_sale'],
+    'author': 'Odoo Mates, Sempai Space',
+    'company': 'Odoo Mates, Sempai Space',
+    'maintainer': 'Odoo Mates, Sempai Space',
+    'website': 'http://odoomates.tech, https://www.sempai.space',
+    'support': 'odoomates@gmail.com, sempaispace@gmail.com',
+    'data': [
+        'views/pos.xml',
+        'views/pos_templates.xml'
     ],
-    "qweb": ["static/src/xml/pos_order_to_sale_order.xml"],
+    'qweb': [
+        'static/src/xml/PosFEinvoiceButton.xml',
+        'static/src/xml/PosFEinvoicePopup.xml',
+        
+    ],
+    'images': ['static/description/banner.png'],
+    'license': 'LGPL-3',
+    'installable': True,
+    'auto_install': False,
+    'application': False,
 }

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates id="template" xml:space="preserve">
+    <t t-name="FEButton" owl="1">
+        <button class="control-button" t-on-click="display_popup_FE">
+            <i class="fa fa-file"/>
+            <span>Crear Factura Electrónica (FE)
+        </span>
+        </button>
+    </t>
+</templates>

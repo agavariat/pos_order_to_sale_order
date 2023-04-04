@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+   <t t-name="FEinvoicePopup" owl="1">
+       <div role="dialog" class="modal-dialog">
+           <div class="popup popup-FEinvoice">
+               <p class="title">
+                   <t t-esc="props.title" />
+               </p>
+               <main class="body">
+                    <t style="text-align: center;">
+                            <button style="display: block; margin: 0 auto; background-color: #6c757d; color: #fff; border: none; border-radius: 5px; padding: 10px 20px; font-size: 16px; font-weight: bold;" t-on-click="createDraftSaleOrder">Crear</button>
+                    </t>
+            </main>
+               <div class="footer">
+                   <div class="button cancel" t-on-click="confirm">
+                       <t t-esc="props.confirmText" />
+                   </div>
+               </div>
+           </div>
+       </div>
+   </t>
+</templates>

@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
+from . import pos
 from . import sale_order
 from . import sale_order_line
-from . import pos_config

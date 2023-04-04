@@ -21,3 +21,4 @@ class SaleOrderLine(models.Model):
             "price_unit": order_line_data["price_unit"],
             "tax_id": order_line_data["tax_ids"],
         }
+        

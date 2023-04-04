@@ -2,7 +2,8 @@
 # @author: Sylvain LE GAL (https://twitter.com/legalsylvain)
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
-from odoo import _, api, models
+
+from odoo import _, api, models, fields
 
 
 class SaleOrder(models.Model):
@@ -12,7 +13,7 @@ class SaleOrder(models.Model):
     def _prepare_from_pos(self, order_data):
         PosSession = self.env["pos.session"]
         session = PosSession.browse(order_data["pos_session_id"])
-        vals = {
+        return {
             "partner_id": order_data["partner_id"],
             "origin": _("Point of Sale %s") % (session.name),
             "client_order_ref": order_data["name"],
@@ -20,48 +21,38 @@ class SaleOrder(models.Model):
             "pricelist_id": order_data["pricelist_id"],
             "fiscal_position_id": order_data["fiscal_position_id"],
         }
-        # To set default warehouse based on POS config stock location
-        if session and session.config_id and session.config_id.stock_location_id:
-            warehouse = self.env['stock.warehouse'].sudo().search([('lot_stock_id', '=', session.config_id.stock_location_id.id)], limit=1)
-            if warehouse:
-                vals['warehouse_id'] = warehouse.id
-        return vals
-
+    
     @api.model
     def create_order_from_pos(self, order_data, action):
         SaleOrderLine = self.env["sale.order.line"]
 
         # Create Draft Sale order
         order_vals = self._prepare_from_pos(order_data)
-        sale_order = self.create(order_vals.copy())
-        sale_order.onchange_partner_id()
-        # we rewrite data, because onchange could alter some
-        # custom data (like pricelist)
-        sale_order.write(order_vals)
+        sale_order = self.create(order_vals)
 
         # create Sale order lines
         for order_line_data in order_data["lines"]:
             # Create Sale order lines
             order_line_vals = SaleOrderLine._prepare_from_pos(
-                sale_order, order_line_data[2])
-            sale_order_line = SaleOrderLine.create(
-                order_line_vals.copy())
-            sale_order_line.product_id_change()
-            # we rewrite data, because onchange could alter some
-            # data (like quantity, or price)
-            sale_order_line.write(order_line_vals)
+                sale_order, order_line_data[2]
+            )
+            SaleOrderLine.create(order_line_vals)
 
         # Confirm Sale Order
-        if action in ["confirmed", "delivered"]:
+        if action in ["confirmed", "delivered", "invoiced"]:
             sale_order.action_confirm()
 
         # mark picking as delivered
-        if action == "delivered":
+        if action in ["delivered", "invoiced"]:
             # Mark all moves are delivered
-            for move in sale_order.mapped(
-                    "picking_ids.move_ids_without_package"):
+            for move in sale_order.mapped("picking_ids.move_ids_without_package"):
                 move.quantity_done = move.product_uom_qty
             sale_order.mapped("picking_ids").button_validate()
+
+        if action in ["invoiced"]:
+            # Create and confirm invoices
+            sale_order._create_invoices()
+           # invoices.action_post()
 
         return {
             "sale_order_id": sale_order.id,
