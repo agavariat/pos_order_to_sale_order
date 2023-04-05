@@ -39,19 +39,20 @@ class SaleOrder(models.Model):
             SaleOrderLine.create(order_line_vals)
 
         # Confirm Sale Order
-        if action in ["confirmed", "delivered", "invoiced"]:
+        if action in ["invoiced"]:
             sale_order.action_confirm()
 
         # mark picking as delivered
-        if action in ["delivered", "invoiced"]:
+        if action in ["invoiced"]:
             # Mark all moves are delivered
             for move in sale_order.mapped("picking_ids.move_ids_without_package"):
                 move.quantity_done = move.product_uom_qty
             sale_order.mapped("picking_ids").button_validate()
-
-        if action in ["invoiced"]:
-            # Create and confirm invoices
             sale_order._create_invoices()
+
+       # if action in ["invoiced"]:
+            # Create and confirm invoices
+            
            # invoices.action_post()
 
         return {
