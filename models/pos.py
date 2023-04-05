@@ -14,13 +14,13 @@ class PosCoupons(models.Model):
 
     #enable_service_charge = fields.Boolean(string='Service Charges')
     iface_create_sale_order = fields.Boolean(
-        string="Create Sale Orders",
+        string="Crear Factura Electrónica",
         compute="_compute_iface_create_sale_order",
         store=True,
     )
 
     iface_create_delivered_sale_order = fields.Boolean(
-        string="Create Delivered Sale Orders",
+        string="Crear Factura Electrónica (FE)",
         default=True,
         help="If checked, the cashier will have the possibility to create"
         " a confirmed sale Order, based on the current draft PoS Order.\n"
@@ -28,9 +28,9 @@ class PosCoupons(models.Model):
         " process will be possible.",
     )
 
-    restrict_sales_amt = fields.Boolean(string='Restrict Sales Amount')
+    restrict_sales_amt2 = fields.Boolean(string='Restricción de monto')
     
-    restrict_amt = fields.Float(string="Restrict to sale more than")
+    restrict_amt2 = fields.Float(string="Restringir pago por encima de")
 
 
     @api.depends("iface_create_delivered_sale_order")

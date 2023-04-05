@@ -10,9 +10,9 @@ odoo.define('pos_order_to_sale_order.RestrictAmount', function (require) {
           _onClickPay() {  
               var order = this.env.pos.get_order();
               var total = order.get_total_with_tax();
-              var restrict_sales_amt = this.env.pos.config.restrict_sales_amt;
-              var restrict_amt = this.env.pos.config.restrict_amt;
-              if(restrict_sales_amt && total > restrict_amt){ 
+              var restrict_sales_amt2 = this.env.pos.config.restrict_sales_amt2;
+              var restrict_amt2 = this.env.pos.config.restrict_amt2;
+              if(restrict_sales_amt2 && total > restrict_amt2){ 
                 var core = require('web.core');
                 var _t = core._t;
                 Gui.showPopup("FEinvoicePopup", {
