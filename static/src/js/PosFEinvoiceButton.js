@@ -23,9 +23,8 @@ odoo.define('pos_order_to_sale_order.FEButton', function (require) {
          component: FEButton,
          condition: function() {
              return (
-                this.env.pos.config.iface_create_sale_order
-              //  this.env.pos.get_order().get_partner() &&
-               // this.env.pos.get_order().get_orderlines().length !== 0
+                
+                 this.env.pos.config.iface_create_sale_order
             );
          },
      });
